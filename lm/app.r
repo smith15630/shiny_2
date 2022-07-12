@@ -8,12 +8,13 @@
 #
 
 library(shiny)
+library(ggplot2)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Regression data"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -54,7 +55,9 @@ ui <- fluidPage(
             radioButtons("disp", "Display",
                          choices = c(Head = "head",
                                      All = "all"),
-                         selected = "head")
+                         selected = "head"),
+
+                    actionButton("go", "Model Data")   
         ),
 
         # Show a plot of the generated distribution
@@ -79,25 +82,25 @@ server <- function(input, output) {
         return(df)
     })
     
-    # output$distPlot <- renderPlot({
-    #     # generate bins based on input$bins from ui.R
-    #     x    <- faithful[, 2]
-    #     bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    #     print(bins)
-    #     # draw the histogram with the specified number of bins
-    #     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    # })
-    # 
-    
+    #Making the stuff that the button does
+    modeled_data <- eventReactive(input$go, {
+    model = lm(formula= y~x, 
+        data=dataInput())
+        print(model)
+        return(model)
+  })
+      
     output$distPlot <- renderPlot({
-        plot(dataInput()$x,dataInput()$y)
-    })
+        #plot(dataInput()$x,dataInput()$y)
+        ggplot() + geom_point(aes(x = dataInput()$x, y = dataInput()$y, col = 'green')) 
+                              })
     
     output$lmtPlot <- renderPlot({
         plot(dataInput()$x,dataInput()$y)
     })
     
     
+   
     output$contents <- renderTable({
         
         # input$file1 will be NULL initially. After the user selects
