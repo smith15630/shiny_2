@@ -92,12 +92,14 @@ server <- function(input, output) {
       
     output$distPlot <- renderPlot({
         #plot(dataInput()$x,dataInput()$y)
-        ggplot() + geom_point(aes(x = dataInput()$x, y = dataInput()$y, col = 'green')) 
+        ggplot() + geom_point(aes(x = dataInput()$x, y = dataInput()$y)) 
                               })
     
     output$lmtPlot <- renderPlot({
-        plot(dataInput()$x,dataInput()$y)
-    })
+        #plot(dataInput()$x,dataInput()$y)
+        ggplot()+
+        geom_point(aes(x = dataInput()$x, y = dataInput()$y)) 
+                    + abline(model)
     
     
    
@@ -118,6 +120,5 @@ server <- function(input, output) {
     })
         
 }
-
-# Run the application 
+#run the file
 shinyApp(ui = ui, server = server)
